@@ -1,14 +1,16 @@
 package main
 
 import (
-	"flag"
 	"fmt"
+	"go-dc-bot/utils"
 )
 
 func main() {
-	flagTest := flag.String("wings", "w", "wings")
+	test2()
+}
 
-	flag.Parse()
-	fmt.Println(flagTest)
-	fmt.Println("Booting up!")
+func test2() {
+	flagTest := utils.GetConfigurationFlags()
+
+	fmt.Println(*flagTest.ConfigPath)
 }
