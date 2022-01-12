@@ -2,19 +2,21 @@ package utils
 
 import (
 	"flag"
+	"gopkg.in/yaml.v2"
+	"io/ioutil"
+	"log"
 	"path"
 )
 
 var configurationFlags = getFlag()
+var configurationYaml = getYaml()
 
 type FlagArguments struct {
 	ConfigPath *string
 }
 
-type ConfigStructure struct {
-	Hits      int64
-	Time      int64
-	CamelCase string `yaml:"camelCase"`
+type ConfigYamlStructure struct {
+	BotToken string `yaml:"botToken"`
 }
 
 func getFlag() FlagArguments {
@@ -27,6 +29,24 @@ func getFlag() FlagArguments {
 	}
 }
 
+func getYaml() *ConfigYamlStructure {
+	cfgFile := &ConfigYamlStructure{}
+	yamlFile, err := ioutil.ReadFile(*GetConfigurationFlags().ConfigPath)
+	if err != nil {
+		log.Printf("yamlFile.Get err   #%v ", err)
+	}
+	err = yaml.Unmarshal(yamlFile, cfgFile)
+	if err != nil {
+		log.Fatalf("Unmarshal: %v", err)
+	}
+
+	return cfgFile
+}
+
 func GetConfigurationFlags() *FlagArguments {
 	return &configurationFlags
+}
+
+func GetConfigurationYaml() *ConfigYamlStructure {
+	return configurationYaml
 }

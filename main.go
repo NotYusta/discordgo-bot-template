@@ -11,6 +11,7 @@ func main() {
 
 func test2() {
 	flagTest := utils.GetConfigurationFlags()
-
+	flagTestYaml := utils.GetConfigurationYaml()
+	fmt.Println(flagTestYaml.BotToken)
 	fmt.Println(*flagTest.ConfigPath)
 }
