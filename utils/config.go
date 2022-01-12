@@ -19,14 +19,15 @@ type ConfigYamlStructure struct {
 	BotToken string `yaml:"botToken"`
 }
 
-func getFlag() FlagArguments {
+func getFlag() *FlagArguments {
 	configPathFlag := flag.String("config", "./config.yml", "config.yml file path")
 	flag.Parse()
 	configPath := path.Join(*configPathFlag)
-
-	return FlagArguments{
+	flagArguments := FlagArguments{
 		ConfigPath: &configPath,
 	}
+
+	return &flagArguments
 }
 
 func getYaml() *ConfigYamlStructure {
@@ -44,7 +45,7 @@ func getYaml() *ConfigYamlStructure {
 }
 
 func GetConfigurationFlags() *FlagArguments {
-	return &configurationFlags
+	return configurationFlags
 }
 
 func GetConfigurationYaml() *ConfigYamlStructure {
