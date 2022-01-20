@@ -2,18 +2,36 @@ package main
 
 import (
 	"fmt"
+	"github.com/bwmarrin/discordgo"
 	"go-dc-bot/utils"
+	"os"
+	"os/signal"
+	"syscall"
 )
 
 func main() {
-	test2()
-}
+	discord, err := discordgo.New("Bot " + utils.GetConfigurationYaml().BotToken)
 
-func test2() {
-	flagTest := utils.GetConfigurationFlags()
-	flagTest2 := utils.GetConfigurationFlags()
-	flagTestYaml := utils.GetConfigurationYaml()
-	fmt.Println(flagTestYaml.BotToken)
-	fmt.Println(flagTest.ConfigPath)
-	fmt.Println(flagTest2.ConfigPath)
+	if err != nil {
+		println("An error occurred while starting the bot!")
+		println(fmt.Sprint(err))
+		return
+	}
+
+	discord.AddHandler(func(session *discordgo.Session, ready *discordgo.Ready) {
+		println(discord.Token)
+	})
+	err = discord.Open()
+	if err != nil {
+		println("An error occurred while starting the bot!")
+		println(fmt.Sprint(err))
+		return
+	}
+
+	sc := make(chan os.Signal, 1)
+	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt, os.Kill)
+	signalResponse := <-sc
+	println("Stopping server, received signal: " + signalResponse.String())
+
+	err = discord.Close()
 }

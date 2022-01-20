@@ -12,7 +12,7 @@ var configurationFlags = getFlag()
 var configurationYaml = getYaml()
 
 type FlagArguments struct {
-	ConfigPath *string
+	ConfigPath string
 }
 
 type ConfigYamlStructure struct {
@@ -24,7 +24,7 @@ func getFlag() *FlagArguments {
 	flag.Parse()
 	configPath := path.Join(*configPathFlag)
 	flagArguments := FlagArguments{
-		ConfigPath: &configPath,
+		ConfigPath: configPath,
 	}
 
 	return &flagArguments
@@ -32,7 +32,7 @@ func getFlag() *FlagArguments {
 
 func getYaml() *ConfigYamlStructure {
 	cfgFile := &ConfigYamlStructure{}
-	yamlFile, err := ioutil.ReadFile(*GetConfigurationFlags().ConfigPath)
+	yamlFile, err := ioutil.ReadFile(GetConfigurationFlags().ConfigPath)
 	if err != nil {
 		log.Printf("yamlFile.Get err   #%v ", err)
 	}
@@ -48,6 +48,6 @@ func GetConfigurationFlags() *FlagArguments {
 	return configurationFlags
 }
 
-func GetConfigurationYaml() *ConfigYamlStructure {
-	return configurationYaml
+func GetConfigurationYaml() ConfigYamlStructure {
+	return *configurationYaml
 }
