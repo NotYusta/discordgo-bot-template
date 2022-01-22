@@ -1,4 +1,4 @@
-package utils
+package config
 
 import (
 	"flag"
@@ -11,14 +11,6 @@ import (
 var configurationFlags = getFlag()
 var configurationYaml = getYaml()
 
-type FlagArguments struct {
-	ConfigPath string
-}
-
-type ConfigYamlStructure struct {
-	BotToken string `yaml:"botToken"`
-}
-
 func getFlag() *FlagArguments {
 	configPathFlag := flag.String("config", "./config.yml", "config.yml file path")
 	flag.Parse()
@@ -30,8 +22,8 @@ func getFlag() *FlagArguments {
 	return &flagArguments
 }
 
-func getYaml() *ConfigYamlStructure {
-	cfgFile := &ConfigYamlStructure{}
+func getYaml() *YamlStructure {
+	cfgFile := &YamlStructure{}
 	yamlFile, err := ioutil.ReadFile(GetConfigurationFlags().ConfigPath)
 	if err != nil {
 		log.Printf("yamlFile.Get err   #%v ", err)
@@ -48,6 +40,6 @@ func GetConfigurationFlags() *FlagArguments {
 	return configurationFlags
 }
 
-func GetConfigurationYaml() ConfigYamlStructure {
-	return *configurationYaml
+func GetConfigurationYaml() *YamlStructure {
+	return configurationYaml
 }

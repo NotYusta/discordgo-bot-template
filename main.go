@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	discord, err := discordgo.New("Bot " + utils.GetConfigurationYaml().BotToken)
+	discord, err := discordgo.New("Bot " + utils.GetConfig().GetConfigurationYaml().BotToken)
 
 	if err != nil {
 		println("An error occurred while starting the bot!")
@@ -34,4 +34,5 @@ func main() {
 	println("Stopping server, received signal: " + signalResponse.String())
 
 	err = discord.Close()
+
 }

@@ -8,6 +8,6 @@ var (
 
 func EventManager(session discordgo.Session) {
 	for _, element := range eventHandlers {
-		session.AddHandler(element.Handler)
+		session.AddHandler(element.Handle)
 	}
 }
