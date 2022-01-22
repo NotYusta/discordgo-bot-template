@@ -1,1 +1,8 @@
 botToken: "Your-Bot-Token"
+options:
+  activity:
+    enable: true
+    type: "STREAMING"
+    description: "YOU ON MY SIGHT"
+    url: "https://youtube.com/watch?v=BBJa32lCaaY"
+  prefix: "!!"

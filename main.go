@@ -27,7 +27,7 @@ func main() {
 		println(fmt.Sprint(err))
 		return
 	}
-	
+
 	sc := make(chan os.Signal, 1)
 	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt, os.Kill)
 	signalResponse := <-sc

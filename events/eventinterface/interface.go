@@ -1,4 +1,4 @@
-package _interface
+package eventinterface
 
 import "github.com/bwmarrin/discordgo"
 

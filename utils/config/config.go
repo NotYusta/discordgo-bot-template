@@ -22,8 +22,8 @@ func getFlag() *FlagArguments {
 	return &flagArguments
 }
 
-func getYaml() *YamlStructure {
-	cfgFile := &YamlStructure{}
+func getYaml() *ConfStructure {
+	cfgFile := &ConfStructure{}
 	yamlFile, err := ioutil.ReadFile(GetConfigurationFlags().ConfigPath)
 	if err != nil {
 		log.Printf("yamlFile.Get err   #%v ", err)
@@ -40,6 +40,6 @@ func GetConfigurationFlags() *FlagArguments {
 	return configurationFlags
 }
 
-func GetConfigurationYaml() *YamlStructure {
+func GetConfigurationYaml() *ConfStructure {
 	return configurationYaml
 }
