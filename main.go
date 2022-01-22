@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/bwmarrin/discordgo"
+	"go-dc-bot/events"
 	"go-dc-bot/utils"
 	"os"
 	"os/signal"
@@ -10,7 +11,8 @@ import (
 )
 
 func main() {
-	discord, err := discordgo.New("Bot " + utils.GetConfig().GetConfigurationYaml().BotToken)
+	BotToken := utils.GetConfig().GetConfigurationYaml().BotToken
+	discord, err := discordgo.New("Bot " + BotToken)
 
 	if err != nil {
 		println("An error occurred while starting the bot!")
@@ -18,16 +20,14 @@ func main() {
 		return
 	}
 
-	discord.AddHandler(func(session *discordgo.Session, ready *discordgo.Ready) {
-		println(discord.Token)
-	})
+	events.Init(discord)
 	err = discord.Open()
 	if err != nil {
 		println("An error occurred while starting the bot!")
 		println(fmt.Sprint(err))
 		return
 	}
-
+	
 	sc := make(chan os.Signal, 1)
 	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt, os.Kill)
 	signalResponse := <-sc
