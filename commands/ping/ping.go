@@ -17,7 +17,6 @@ func exec(session *discordgo.Session, event *discordgo.MessageCreate, args []str
 	discord.ChannelMessageSend(session, event.ChannelID, "pong")
 }
 
-func Get() (command *commandinterface.CommandInterface) {
-	command = &pingCommand
-	return
+func Get() *commandinterface.CommandInterface {
+	return &pingCommand
 }
