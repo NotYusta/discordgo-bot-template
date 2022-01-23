@@ -10,6 +10,7 @@ import (
 
 func Get() (eventHandler eventinterface.EventHandler) {
 	eventHandler = eventinterface.EventHandler{Handle: func(session *discordgo.Session, event interface{}) {
+
 		if event, ok := event.(*discordgo.Ready); ok {
 			var config = utils.GetConfig().GetConfigurationYaml()
 			println("Logged in as " + event.User.Username)

@@ -4,6 +4,7 @@ import (
 	"github.com/bwmarrin/discordgo"
 	"go-dc-bot/commands/commandinterface"
 	"go-dc-bot/commands/ping"
+	"go-dc-bot/utils/discord"
 )
 
 var commandsData = make(commandinterface.CommandsData)
@@ -32,7 +33,7 @@ func Init() {
 func Exec(session *discordgo.Session, event *discordgo.MessageCreate, commandName string, args []string) {
 	commandData := commandsData[commandName]
 	if commandData == nil {
-		session.ChannelMessageSend(event.ChannelID, "Unknown command!")
+		discord.ChannelMessageSend(session, event.ChannelID, "Unknown command!")
 		return
 	}
 
