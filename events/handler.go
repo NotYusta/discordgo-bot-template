@@ -7,12 +7,10 @@ import (
 	"go-dc-bot/events/ready"
 )
 
-var (
-	EventHandlers = []eventinterface.EventHandler{
-		messagecreate.Get(),
-		ready.Get(),
-	}
-)
+var EventHandlers = []eventinterface.EventHandler{
+	messagecreate.Get(),
+	ready.Get(),
+}
 
 func Init(session *discordgo.Session) {
 	for _, element := range EventHandlers {

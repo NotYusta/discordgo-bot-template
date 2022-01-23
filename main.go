@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/bwmarrin/discordgo"
+	"go-dc-bot/commands"
 	"go-dc-bot/events"
 	"go-dc-bot/utils"
 	"os"
@@ -20,6 +21,7 @@ func main() {
 		return
 	}
 
+	commands.Init()
 	events.Init(discord)
 	err = discord.Open()
 	if err != nil {
@@ -31,7 +33,7 @@ func main() {
 	sc := make(chan os.Signal, 1)
 	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt, os.Kill)
 	signalResponse := <-sc
-	println("Stopping server, received signal: " + signalResponse.String())
+	println("Closing discord connection, received signal: " + signalResponse.String())
 
 	err = discord.Close()
 
