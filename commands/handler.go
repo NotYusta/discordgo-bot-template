@@ -27,7 +27,7 @@ func Init() {
 		println("Registered [" + commandElement.Name + "] command")
 	}
 
-	println("Succesfully registered all commands")
+	println("Successfully registered all commands")
 	println("[-------------------------------]")
 }
 
