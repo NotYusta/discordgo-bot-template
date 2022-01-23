@@ -15,9 +15,7 @@ var (
 func Get() eventinterface.EventHandler {
 	return eventinterface.EventHandler{Handle: func(session *discordgo.Session, event interface{}) {
 		if event, ok := event.(*discordgo.Ready); ok {
-
 			println("Logged in as " + event.User.Username)
-
 			if activityOptions.Enable {
 				switch strings.ToUpper(activityOptions.Type) {
 				case "PLAYING":
@@ -57,6 +55,7 @@ func setStatusDataWithPresence(session *discordgo.Session, activityType discordg
 		setStatusData(session, "online", activityType)
 	}
 }
+
 func setStatusData(session *discordgo.Session, status string, activityType discordgo.ActivityType) {
 	err := session.UpdateStatusComplex(discordgo.UpdateStatusData{
 		IdleSince: nil,

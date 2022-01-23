@@ -39,12 +39,12 @@ func Exec(session *discordgo.Session, event *discordgo.MessageCreate, commandNam
 		return
 	}
 
-	if commandAccessContains(commandData.CommandAccess, commandinterface.CommandAccessAdmin) {
+	if commandAccessContains(commandData.CommandAccess, commandinterface.CommandAccessDJ) {
 		// TODO: DO DJ CHECKS
 		return
 	}
 
-	if commandAccessContains(commandData.CommandAccess, commandinterface.CommandAccessAdmin) {
+	if commandAccessContains(commandData.CommandAccess, commandinterface.CommandAccessModerator) {
 		// TODO: DO MODERATOR CHECKS
 		return
 	}
