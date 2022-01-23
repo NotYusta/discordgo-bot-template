@@ -12,9 +12,12 @@ import (
 )
 
 func main() {
-	BotToken := utils.GetConfig().GetConfigurationYaml().BotToken
-	discord, err := discordgo.New("Bot " + BotToken)
 
+	conf := utils.GetConfig().GetConfigurationYaml()
+	botToken := conf.BotToken
+	session, err := discordgo.New("Bot " + botToken)
+
+	session.Identify.Intents = discordgo.MakeIntent(discordgo.IntentsAllWithoutPrivileged)
 	if err != nil {
 		println("An error occurred while starting the bot!")
 		println(fmt.Sprint(err))
@@ -22,8 +25,9 @@ func main() {
 	}
 
 	commands.Init()
-	events.Init(discord)
-	err = discord.Open()
+	events.Init(session)
+
+	err = session.Open()
 	if err != nil {
 		println("An error occurred while starting the bot!")
 		println(fmt.Sprint(err))
@@ -35,6 +39,6 @@ func main() {
 	signalResponse := <-sc
 	println("Closing discord connection, received signal: " + signalResponse.String())
 
-	err = discord.Close()
+	err = session.Close()
 
 }

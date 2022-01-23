@@ -4,51 +4,63 @@ import (
 	"github.com/bwmarrin/discordgo"
 	"go-dc-bot/events/eventinterface"
 	"go-dc-bot/utils"
-	"go-dc-bot/utils/config"
 	"strings"
 )
 
-func Get() (eventHandler eventinterface.EventHandler) {
-	eventHandler = eventinterface.EventHandler{Handle: func(session *discordgo.Session, event interface{}) {
+var (
+	presenceOptions = utils.GetConfig().GetConfigurationYaml().Options.Presence
+	activityOptions = utils.GetConfig().GetConfigurationYaml().Options.Activity
+)
 
+func Get() eventinterface.EventHandler {
+	return eventinterface.EventHandler{Handle: func(session *discordgo.Session, event interface{}) {
 		if event, ok := event.(*discordgo.Ready); ok {
-			var config = utils.GetConfig().GetConfigurationYaml()
+
 			println("Logged in as " + event.User.Username)
-			if config.Options.Activity.Enable {
-				activityOptions := config.Options.Activity
+
+			if activityOptions.Enable {
 				switch strings.ToUpper(activityOptions.Type) {
 				case "PLAYING":
-					setStatusData(session, config, 0)
+					setStatusDataWithPresence(session, 0)
 					break
 				case "STREAMING":
-					setStatusData(session, config, 1)
+					setStatusDataWithPresence(session, 1)
 					break
 				case "LISTENING":
-					setStatusData(session, config, 2)
+					setStatusDataWithPresence(session, 2)
 					break
 				case "WATCHING":
-					setStatusData(session, config, 3)
+					setStatusDataWithPresence(session, 3)
 					break
 				case "CUSTOM":
-					setStatusData(session, config, 4)
+					setStatusDataWithPresence(session, 4)
 					break
 				case "COMPETING":
-					setStatusData(session, config, 5)
+					setStatusDataWithPresence(session, 5)
 					break
-
 				}
-			}
+			} else if presenceOptions.Enable {
+				err := session.UpdateStatusComplex(discordgo.UpdateStatusData{
+					Status: strings.ToLower(presenceOptions.Type),
+				})
 
+				sendErrMessage(err, "Cannot set the activity status!")
+			}
 		}
 	}}
-
-	return eventHandler
 }
 
-func setStatusData(session *discordgo.Session, config *config.ConfStructure, activityType discordgo.ActivityType) {
-	activityOptions := config.Options.Activity
+func setStatusDataWithPresence(session *discordgo.Session, activityType discordgo.ActivityType) {
+	if presenceOptions.Enable {
+		setStatusData(session, presenceOptions.Type, activityType)
+	} else {
+		setStatusData(session, "online", activityType)
+	}
+}
+func setStatusData(session *discordgo.Session, status string, activityType discordgo.ActivityType) {
 	err := session.UpdateStatusComplex(discordgo.UpdateStatusData{
 		IdleSince: nil,
+		Status:    status,
 		Activities: []*discordgo.Activity{{
 			Name: activityOptions.Description,
 			Type: activityType,
@@ -56,7 +68,7 @@ func setStatusData(session *discordgo.Session, config *config.ConfStructure, act
 		}},
 	})
 
-	sendErrMessage(err, "Cannot set the status!")
+	sendErrMessage(err, "Cannot set the activity status!")
 }
 
 func sendErrMessage(value error, message string) {

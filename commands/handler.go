@@ -5,6 +5,7 @@ import (
 	"go-dc-bot/commands/commandinterface"
 	"go-dc-bot/commands/ping"
 	"go-dc-bot/utils/discord"
+	"sort"
 )
 
 var commandsData = make(commandinterface.CommandsData)
@@ -12,16 +13,16 @@ var commandsData = make(commandinterface.CommandsData)
 func Init() {
 	println("[-------------------------------]")
 	println("Registering commands..")
-	temporaryCommandsData := []*commandinterface.CommandInterface{
+	temporaryCommandsData := []commandinterface.CommandInterface{
 		ping.Get(),
 	}
 
 	for _, commandElement := range temporaryCommandsData {
 		println("Registering [" + commandElement.Name + "] command")
-		commandsData[commandElement.Name] = commandElement
+		commandsData[commandElement.Name] = &commandElement
 
 		for _, commandAlias := range commandElement.Alias {
-			commandsData[commandAlias] = commandElement
+			commandsData[commandAlias] = &commandElement
 		}
 		println("Registered [" + commandElement.Name + "] command")
 	}
@@ -32,22 +33,31 @@ func Init() {
 
 func Exec(session *discordgo.Session, event *discordgo.MessageCreate, commandName string, args []string) {
 	commandData := commandsData[commandName]
+
 	if commandData == nil {
 		discord.ChannelMessageSend(session, event.ChannelID, "Unknown command!")
 		return
 	}
 
-	if commandData.CommandAccess == commandinterface.CommandAccessDJ {
-		// DO DJ CHECKS
+	if commandAccessContains(commandData.CommandAccess, commandinterface.CommandAccessAdmin) {
+		// TODO: DO DJ CHECKS
+		return
 	}
 
-	if commandData.CommandAccess == commandinterface.CommandAccessModerator {
-		// DO MODERATOR CHECKS
+	if commandAccessContains(commandData.CommandAccess, commandinterface.CommandAccessAdmin) {
+		// TODO: DO MODERATOR CHECKS
+		return
 	}
 
-	if commandData.CommandAccess == commandinterface.CommandAccessAdmin {
-		// DO ADMIN CHECKS
+	if commandAccessContains(commandData.CommandAccess, commandinterface.CommandAccessAdmin) {
+		// TODO: DO ADMIN CHECKS
+		return
 	}
 
 	commandData.Exec(session, event, args)
+}
+
+func commandAccessContains(a []commandinterface.CommandAccess, x commandinterface.CommandAccess) bool {
+	accessLength := sort.Search(len(a), func(i int) bool { return a[i] >= x })
+	return accessLength > 0
 }

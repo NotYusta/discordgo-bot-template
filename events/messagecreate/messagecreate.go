@@ -9,8 +9,8 @@ import (
 	"strings"
 )
 
-func Get() (eventHandler eventinterface.EventHandler) {
-	eventHandler = eventinterface.EventHandler{Handle: func(session *discordgo.Session, event interface{}) {
+func Get() eventinterface.EventHandler {
+	return eventinterface.EventHandler{Handle: func(session *discordgo.Session, event interface{}) {
 		if event, ok := event.(*discordgo.MessageCreate); ok {
 			messageContent := event.Message.Content
 			commandArgs := strings.Split(messageContent, " ")
@@ -22,6 +22,4 @@ func Get() (eventHandler eventinterface.EventHandler) {
 			}
 		}
 	}}
-
-	return
 }

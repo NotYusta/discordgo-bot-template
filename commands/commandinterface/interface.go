@@ -6,7 +6,6 @@ type CommandAccess string
 type CommandsData map[string]*CommandInterface
 
 const (
-	CommandAccessNone      CommandAccess = ""
 	CommandAccessDJ        CommandAccess = "DJ"
 	CommandAccessAdmin     CommandAccess = "ADMIN"
 	CommandAccessModerator CommandAccess = "MODERATOR"
@@ -16,5 +15,5 @@ type CommandInterface struct {
 	Exec          func(session *discordgo.Session, event *discordgo.MessageCreate, args []string)
 	Name          string
 	Alias         []string
-	CommandAccess CommandAccess
+	CommandAccess []CommandAccess
 }
